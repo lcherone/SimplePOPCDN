@@ -161,7 +161,7 @@ class SimplePOPCDN{
 			case 'css' : $this->request_info['mime'] = 'text/css;charset=utf-8'; break;
 			case 'xml' : $this->request_info['mime'] = 'text/xml;charset=utf-8'; break;
 			case 'json': $this->request_info['mime'] = 'application/json;charset=utf-8'; break;
-			case 'txt' : $this->request_info['mime'] = 'text/;charset=utf-8'; break;
+			case 'txt' : $this->request_info['mime'] = 'text/plain;charset=utf-8'; break;
 			default :
 				if(empty($this->request_info['extension'])){
 					$this->error($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden');
