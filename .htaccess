@@ -1,0 +1,7 @@
+RewriteEngine On
+Options -Indexes
+RewriteBase /PHPCDNv2
+RewriteCond %{REQUEST_URI} !^/index.php
+RewriteRule .* index.php [L]
+
+
