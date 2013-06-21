@@ -168,7 +168,6 @@ class SimplePOPCDN{
 				}else{
 					// extension is not supported, issue *415 Unsupported Media Type*
 					$this->error($_SERVER['SERVER_PROTOCOL'].' 415 Unsupported Media Type');
-					exit;
 				}
 		}
 		$this->cache_full   = $this->cache_path.$this->cache_name.'.'.$this->request_info['extension'];
