@@ -16,9 +16,9 @@ class SimplePOPCDN{
 	 * @param string $origin = Host that we want to mirror resources
 	 * @param string $cache_path = Path to cache 
 	 * @param string $fix_request = Remove a part of the request string to fix if script is sitting in a subdir
-	 * @param int $cache_expire = Ammount of time in seconds cache is valid for
+	 * @param int $cache_expire = Amount of time in seconds cache is valid for. 2628000 = 1 month
 	 */
-	function __construct($origin=null, $cache_path=null, $fix_request=null, $cache_expire=259200){
+	function __construct($origin=null, $cache_path=null, $fix_request=null, $cache_expire=2628000){
 		$this->origin       = $origin;
 		$this->request      = ($fix_request !== null) ? str_replace($fix_request, '', $_SERVER['REQUEST_URI']) : $_SERVER['REQUEST_URI'];
 		$this->request_part = parse_url($this->request);
@@ -122,7 +122,7 @@ class SimplePOPCDN{
 			curl_close($ch);
 		}
 
-		// Cont.. Gxip
+		// Cont.. Gzip
 		if(headers_sent()){
 			$encoding = false;
 		}elseif(isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'x-gzip') !== false){
