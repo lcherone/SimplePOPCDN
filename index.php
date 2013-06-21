@@ -19,13 +19,13 @@ class SimplePOPCDN{
 	 * @param int $cache_expire = Ammount of time in seconds cache is valid for
 	 */
 	function __construct($origin=null, $cache_path=null, $fix_request=null, $cache_expire=259200){
-		$this->origin 		= $origin;
-		$this->request 		= ($fix_request !== null)?str_replace($fix_request,'',$_SERVER['REQUEST_URI']):$_SERVER['REQUEST_URI'];
+		$this->origin       = $origin;
+		$this->request      = ($fix_request !== null) ? str_replace($fix_request, '', $_SERVER['REQUEST_URI']) : $_SERVER['REQUEST_URI'];
 		$this->request_part = parse_url($this->request);
 		$this->request_info = pathinfo($this->request_part['path']);
-		$this->cache_path 	= $cache_path;
+		$this->cache_path   = $cache_path;
 		$this->cache_expire = $cache_expire;
-		$this->cache_name 	= sha1($this->request);
+		$this->cache_name   = sha1($this->request);
 		$this->setup_request();
 		$this->initialize();
 	}
@@ -74,12 +74,12 @@ class SimplePOPCDN{
 			CURLOPT_URL => $this->origin.$this->request,
 			CURLOPT_TIMEOUT => 5,
 			CURLOPT_CONNECTTIMEOUT => 5,
-			CURLOPT_FAILONERROR => 1,
-			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_BINARYTRANSFER => 1,
-			CURLOPT_HEADER => 0,
-			CURLOPT_NOBODY => 1,
-			CURLOPT_FOLLOWLOCATION => 1
+			CURLOPT_FAILONERROR => true,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_BINARYTRANSFER => true,
+			CURLOPT_HEADER => false,
+			CURLOPT_NOBODY => true,
+			CURLOPT_FOLLOWLOCATION => true
 			));
 
 			// Origin remote file found
@@ -96,10 +96,10 @@ class SimplePOPCDN{
 					CURLOPT_URL => $this->origin.$this->request,
 					CURLOPT_TIMEOUT => 5,
 					CURLOPT_CONNECTTIMEOUT => 5,
-					CURLOPT_FAILONERROR => 1,
-					CURLOPT_RETURNTRANSFER => 1,
-					CURLOPT_BINARYTRANSFER => 1,
-					CURLOPT_HEADER => 0,
+					CURLOPT_FAILONERROR => true,
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_BINARYTRANSFER => true,
+					CURLOPT_HEADER => false,
 					CURLOPT_FILE => $fp
 					));
 
@@ -154,7 +154,7 @@ class SimplePOPCDN{
 		if(!isset($this->request_info['extension'])) $this->request_info['extension'] = null;
 		switch ($this->request_info['extension']) {
 			case 'gif' : $this->request_info['mime'] = 'image/gif';	break;
-			case 'jpg' : $this->request_info['mime'] = 'image/jpeg';break;
+			case 'jpg' : $this->request_info['mime'] = 'image/jpeg'; break;
 			case 'png' : $this->request_info['mime'] = 'image/png'; break;
 			case 'ico' : $this->request_info['mime'] = 'image/x-icon'; break;
 			case 'js'  : $this->request_info['mime'] = 'application/javascript;charset=utf-8'; break;
@@ -180,6 +180,5 @@ class SimplePOPCDN{
 		header('Cache-Control: private');
 		exit('<!DOCTYPE HTML><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>'.$this->origin.' CDN | '.htmlspecialchars($header).'</title></head><body><h1><a href="'.$this->origin.'">'.$this->origin.'</a> CDN - '.htmlspecialchars($header).'</h1><p>'.$message.'</p></body></html>');
 	}
-
 }
 ?>
