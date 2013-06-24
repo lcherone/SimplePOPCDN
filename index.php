@@ -34,7 +34,7 @@ class SimplePOPCDN{
 	}
 
 	private function initialize(){
-		// Setup Gzip based on client accept
+		// Setup Gzip based on client accept header
 		ob_clean();
 		if(isset($_SERVER['HTTP_ACCEPT_ENCODING']) && substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')){
 			ob_start("ob_gzhandler");
@@ -43,12 +43,12 @@ class SimplePOPCDN{
 		}
 		ob_implicit_flush(0);
 
-		// Check local cache
+		// Check local cache for file
 		if(file_exists($this->cache_full)){
-			// Resource last modified time
+			// Set resource last modified time
 			$this->modified = filemtime($this->cache_full);
 
-			// Check client cache
+			// Check client cache if found send 304
 			if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && (strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $this->modified)){
 				header($_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified');
 			}else{
@@ -71,7 +71,7 @@ class SimplePOPCDN{
 				gzclose($h);
 			}
 		}else{
-			// HEAD request - To verify the resource exists
+			// HEAD request - To verify the origin resource exists
 			$ch = curl_init();
 			curl_setopt_array($ch, array(
 			CURLOPT_URL => $this->origin.$this->request,
@@ -85,7 +85,7 @@ class SimplePOPCDN{
 			CURLOPT_FOLLOWLOCATION => true
 			));
 
-			// Origin remote file found
+			// Origin remote file found, lets grab it
 			if(curl_exec($ch) !== false){
 				$fp = fopen($this->cache_full, 'a+b');
 				if(flock($fp, LOCK_EX | LOCK_NB)){
@@ -115,7 +115,7 @@ class SimplePOPCDN{
 					curl_close($ch2);
 				}
 				fclose($fp);
-				// Issue 307 Temporary Redirect
+				// Issue a 307 Temporary Redirect
 				header('Location: '.$this->origin.$this->request, TRUE, 307);
 			}else{
 				// File not found, issue 404
@@ -125,7 +125,7 @@ class SimplePOPCDN{
 			curl_close($ch);
 		}
 
-		// Cont.. Gzip
+		// Cont.. Gzip header check
 		if(headers_sent()){
 			$encoding = false;
 		}elseif(isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'x-gzip') !== false){
@@ -136,7 +136,7 @@ class SimplePOPCDN{
 			$encoding = false;
 		}
 
-		// Finally output buffer
+		// Finally output the buffer
 		if($encoding){
 			$contents = ob_get_contents();
 			ob_end_clean();
