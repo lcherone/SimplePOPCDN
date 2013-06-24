@@ -1,13 +1,16 @@
 <?php
 /**
- * A Simple PHP "Origin Pull" CDN Passthrough caching class 
- * Usage: new SimplePOPCDN('http://origin.com', './cache/', '/subdir', 259200);
+ * A Simple PHP "Origin Pull" CDN Passthrough caching class,
+ *  which enables you to create a simple CDN for automatic 
+ *  mirroring of static content on a faster, lesser loaded server.
+ * 
+ * Usage: new SimplePOPCDN('http://origin.com', './cache/', '/subdir', 2592000);
  * @version 1.0
  * @author Lawrence Cherone <lawrence@cherone.co.uk>
  * @see http://cherone.co.uk
  *
  */
-new SimplePOPCDN('http://cherone.co.uk', './cache/', '/PHPCDNv2');
+new SimplePOPCDN('http://cherone.co.uk', './cache/');
 
 class SimplePOPCDN{
 	/**
@@ -41,7 +44,7 @@ class SimplePOPCDN{
 		ob_implicit_flush(0);
 
 		// Check local cache
-		if(file_exists($this->cache_full) && (time() - $this->cache_expire) < filemtime($this->cache_full)){
+		if(file_exists($this->cache_full)){
 			// Resource last modified time
 			$this->modified = filemtime($this->cache_full);
 
@@ -52,13 +55,13 @@ class SimplePOPCDN{
 				// Send responce headers
 				header('Pragma: public');
 				header("Cache-Control: max-age={$this->cache_expire}");
-				header("Content-type: {$this->request_info['mime']}");
-				header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', $this->modified));
 				header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $this->cache_expire));
+				header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', $this->modified));
+				header("Content-Type: {$this->request_info['mime']}");
 				header('X-Content-Type-Options: nosniff');
 				header('X-XSS-Protection: 1; mode=block');
 				header('Server: CDNServer');
-				header('X-Powered-By: OPPCDN');
+				header('X-Powered-By: SimplePOPCDN');
 				// Stream file
 				set_time_limit(0);
 				$h = gzopen($this->cache_full,'rb');
@@ -86,7 +89,7 @@ class SimplePOPCDN{
 			if(curl_exec($ch) !== false){
 				$fp = fopen($this->cache_full, 'a+b');
 				if(flock($fp, LOCK_EX | LOCK_NB)){
-					// empty *possible* contents
+					// Empty *possible* contents
 					ftruncate($fp, 0);
 					rewind($fp);
 
@@ -103,7 +106,7 @@ class SimplePOPCDN{
 					CURLOPT_FILE => $fp
 					));
 
-					// transfer failed
+					// Transfer failed
 					if(curl_exec($ch2) === false){
 						ftruncate($fp, 0);
 					}
@@ -112,13 +115,13 @@ class SimplePOPCDN{
 					curl_close($ch2);
 				}
 				fclose($fp);
-				// issue 307 Temporary Redirect
+				// Issue 307 Temporary Redirect
 				header('Location: '.$this->origin.$this->request, TRUE, 307);
 			}else{
-				// file not found, issue 404
+				// File not found, issue 404
 				$this->error($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
 			}
-			// finished
+			// Finished
 			curl_close($ch);
 		}
 
@@ -133,13 +136,11 @@ class SimplePOPCDN{
 			$encoding = false;
 		}
 
-		//Finally output gzipped buffer
+		// Finally output buffer
 		if($encoding){
 			$contents = ob_get_contents();
 			ob_end_clean();
 			header('Content-Encoding: '.$encoding);
-			header('ETag: '.md5($contents));
-			header('Content-MD5: '.base64_encode(md5($contents)));
 			print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
 			$size = strlen($contents);
 			echo substr(gzcompress($contents, 9), 0, $size);
@@ -170,7 +171,7 @@ class SimplePOPCDN{
 					$this->error($_SERVER['SERVER_PROTOCOL'].' 415 Unsupported Media Type');
 				}
 		}
-		$this->cache_full   = $this->cache_path.$this->cache_name.'.'.$this->request_info['extension'];
+		$this->cache_full = $this->cache_path.$this->cache_name.'.'.$this->request_info['extension'];
 	}
 
 	private function error($header = "HTTP/1.1 404 Not Found", $message = ""){
