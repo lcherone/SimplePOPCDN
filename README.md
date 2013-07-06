@@ -9,4 +9,4 @@ A Simple PHP "Origin Pull" CDN Passthrough caching class, can be used as a stand
 * @param string $fix_request = Remove a part of the request string to fix if script is sitting in a subdir.
 * @param int $cache_expire = Amount of time in seconds cache is valid for. 2628000 = 1 month.
 
-Usage: `new SimplePOPCDN('http://server.to.mirror.com', './cache/', '/subdir', 259200);`
+Usage: `new SimplePOPCDN('http://server.to.mirror.com', './cache/', '/subdir', 2628000);`
