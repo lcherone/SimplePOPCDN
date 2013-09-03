@@ -1,8 +1,7 @@
 SimplePOPCDN
 ============
 
-A Simple PHP "Origin Pull" CDN Passthrough caching class, can be used as a stand alone script or intergrated into a controller of sort as a model.
-
+A Simple PHP is a "Origin Pull" CDN Pass-through caching class, can be used as a stand alone script or integrated into a controller of sort as a model.
 
 * @param string $origin = Host that we want to mirror static resources.
 * @param string $cache_path = Path to local cache.
