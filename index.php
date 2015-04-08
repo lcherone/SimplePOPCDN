@@ -10,7 +10,7 @@
  * @see http://cherone.co.uk
  *
  */
-new SimplePOPCDN('http://cherone.co.uk', './cache/');
+//new SimplePOPCDN('http://cherone.co.uk', './cache/');
 
 class SimplePOPCDN {
     /**
