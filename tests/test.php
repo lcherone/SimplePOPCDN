@@ -1,5 +1,5 @@
 <?php
-include '../index.php';
+include '/home/travis/build/lcherone/SimplePOPCDN/index.php';
 
 class SimplePOPCDNTest extends PHPUnit_Framework_TestCase {
  
