@@ -14,7 +14,7 @@ class SimplePOPCDN
     /**
      * @param string $origin       Host that we want to mirror resources
      * @param string $cache_path   Path to cache directory
-     * @param string $fix_request  Remove a part of the request string to fix if script is sitting in a subdir
+     * @param string $fix_request  Remove part of the request path to fix if THIS script is sitting in a subdir
      * @param int $cache_expire    Amount of time in seconds cache is valid for. 2628000 = 1 month
      */
     function __construct($origin = null, $cache_path = null, $fix_request = null, $cache_expire = 2628000)
@@ -24,7 +24,7 @@ class SimplePOPCDN
         $this->request_part = parse_url($this->request);
         $this->request_info = pathinfo($this->request_part['path']);
         $this->cache_path   = $cache_path;
-        $this->cache_expire = $cache_expire;
+        $this->cache_expire = (int) $cache_expire;
 
         // setup - see massive list of mimes below if you need to handle more
         $this->setup([
@@ -53,7 +53,7 @@ class SimplePOPCDN
     /**
      *
      */
-    private function setup($accepted = [])
+    private function setup($accepted = array())
     {
         // define extension if not set
         if (!isset($this->request_info['extension'])) {
@@ -188,7 +188,7 @@ class SimplePOPCDN
                     // Stream file
                     set_time_limit(0);
                     $h = gzopen($this->cache_full, 'rb');
-                    while ($line = gzgets($h, 4096)){
+                    while ($line = gzgets($h, 4096)) {
                         echo $line;
                     }
                     gzclose($h);
@@ -248,7 +248,7 @@ class SimplePOPCDN
      * @param array $accepted 
      * @return string
      */
-    private function mime_type($extension = null, $accepted = []) 
+    private function mime_type($extension = null, $accepted = array()) 
     {
         $mime_types = array(
             '123' => 'application/vnd.lotus-1-2-3',
