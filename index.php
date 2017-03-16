@@ -5,22 +5,17 @@
  *  mirroring of static content on a faster, lesser loaded server.
  * 
  * Usage: new SimplePOPCDN('http://origin.com', './cache/', '/subdir', 2592000);
- * @version 1.0
+ * @version 1.1
  * @author Lawrence Cherone <lawrence@cherone.co.uk>
- * @see http://cherone.co.uk
- *
  */
-//new SimplePOPCDN('https://cherone.co.uk', './cache/');
 
 class SimplePOPCDN 
 {
     /**
-     * Constructor, will set up the request and call initialize()
-     *
-     * @param string $origin = Host that we want to mirror resources
-     * @param string $cache_path = Path to cache 
-     * @param string $fix_request = Remove a part of the request string to fix if script is sitting in a subdir
-     * @param int $cache_expire = Amount of time in seconds cache is valid for. 2628000 = 1 month
+     * @param string $origin       Host that we want to mirror resources
+     * @param string $cache_path   Path to cache directory
+     * @param string $fix_request  Remove a part of the request string to fix if script is sitting in a subdir
+     * @param int $cache_expire    Amount of time in seconds cache is valid for. 2628000 = 1 month
      */
     function __construct($origin = null, $cache_path = null, $fix_request = null, $cache_expire = 2628000)
     {
