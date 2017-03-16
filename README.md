@@ -2,7 +2,7 @@ SimplePOPCDN
 ============
 
 SimplePOPCDN is a "Origin Pull" CDN Pass-through caching class, that can be used as a stand alone script or integrated into a controller of sort as a model.
-Its function is to automatically cache a resource's E.G image, CSS, js files from your main site so as to speed up loading times by distributing requests.
+Its function is to automatically cache a resource's E.G image, CSS, js,font files from your main site so as to speed up loading times by distributing requests.
 
 * @param string $origin = Host that we want to mirror static resources.
 * @param string $cache_path = Path to local cache.
