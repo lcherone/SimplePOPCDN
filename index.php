@@ -27,7 +27,7 @@ class SimplePOPCDN
         $this->cache_expire = (int) $cache_expire;
 
         // setup - see massive list of mimes below if you need to handle more
-        $this->setup([
+        $this->setup(array(
             'gif',    
             'jpg',    
             'png',    
@@ -44,7 +44,7 @@ class SimplePOPCDN
             'ttf',    
             'woff',    
             'woff2'    
-        ]);
+        ));
         
         // go...
         $this->handle();
