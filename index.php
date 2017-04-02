@@ -107,6 +107,7 @@ class SimplePOPCDN
                 header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $this->cache_expire));
                 header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', $this->modified));
                 header("Content-Type: {$this->request_info['mime']}");
+                header("Access-Control-Allow-Origin: *");
                 header('X-Content-Type-Options: nosniff');
                 header('X-XSS-Protection: 1; mode=block');
                 header('Server: CDNServer');
@@ -181,6 +182,7 @@ class SimplePOPCDN
                     header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $this->cache_expire));
                     header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', $this->modified));
                     header("Content-Type: {$this->request_info['mime']}");
+                    header("Access-Control-Allow-Origin: *");
                     header('X-Content-Type-Options: nosniff');
                     header('X-XSS-Protection: 1; mode=block');
                     header('Server: CDNServer');
